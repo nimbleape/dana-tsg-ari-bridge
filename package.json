@@ -2,6 +2,10 @@
   "name": "dana-ari-bridge",
   "version": "1.0.0",
   "description": "SFU bridge with snooping capabilities",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nimbleape/dana-tsg-ari-bridge.git"
+  },
   "main": "index.js",
   "author": "Dan Jenkins <dan@nimblea.pe>",
   "license": "MIT",
@@ -12,5 +16,12 @@
     "config": "^3.2.4",
     "mqtt": "^3.0.0",
     "pino": "^5.14.0"
+  },
+  "devDependencies": {
+    "pino-pretty": "^3.4.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "start-pretty": "node index.js | pino-pretty"
   }
 }
