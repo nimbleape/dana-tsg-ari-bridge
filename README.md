@@ -7,6 +7,7 @@ This application creates a bare bones ARI Confbridge with SFU capabilities. It l
 * Node 10+
 * Asterisk 16.6 onwards (but not 17 yet oddly)
 * [Dana-TSG-RTP-STT-AudioServer](https://github.com/nimbleape/dana-tsg-rtp-stt-audioserver) running elsewhere
+* MQTT Server
 
 ## Install
 
