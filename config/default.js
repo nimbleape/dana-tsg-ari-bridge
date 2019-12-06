@@ -12,6 +12,6 @@ module.exports = {
     },
     mqtt: {
         url: 'mqtt://test.mosquitto.org',
-        topicPrefix: 'data-tsg'
+        topicPrefix: 'danatsg'
     }
 }
