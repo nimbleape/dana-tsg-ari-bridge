@@ -13,10 +13,17 @@ log.info('Starting');
 
 async function main() {
     try {
-        log.info('trying to connect to mqtt');
-        const mqttClient = await mqtt.connectAsync(config.get('mqtt.url'))
-        log.info('connected to mqtt');
+        let mqttClient = null;
+
+        if (config.get('mqtt.url')) {
+            log.info('trying to connect to mqtt');
+            mqttClient = await mqtt.connectAsync(config.get('mqtt.url'))
+            log.info('connected to mqtt');
+        }
+
         const ariConfig = config.get('ari');
+
+        log.info({ ariConfig }, 'ari config');
 
         client = await ariClient.connect(ariConfig.url, ariConfig.username, ariConfig.password);
         log.info('connected to ari websocket');
@@ -45,24 +52,26 @@ async function main() {
                     bridges.delete(bridgeName);
                 });
 
-                bridge.on('newStream', async (data) => {
-                    await mqttClient.publish(`${config.get('mqtt.topicPrefix')}/newStream`, JSON.stringify({
-                        roomName: data.roomName,
-                        port: data.port,
-                        callerName: data.callerName,
-                        channelId: data.channelId
-                    }));
+                if (mqttClient) {
+                    bridge.on('newStream', async (data) => {
+                        await mqttClient.publish(`${config.get('mqtt.topicPrefix')}/newStream`, JSON.stringify({
+                            roomName: data.roomName,
+                            port: data.port,
+                            callerName: data.callerName,
+                            channelId: data.channelId
+                        }));
 
-                });
+                    });
 
-                bridge.on('streamEnded', async (data) => {
-                    await mqttClient.publish(`${config.get('mqtt.topicPrefix')}/streamEnded`, JSON.stringify({
-                        name: data.roomName,
-                        port: data.port,
-                        callerName: data.callerName,
-                        channelId: data.channelId
-                    }));
-                });
+                    bridge.on('streamEnded', async (data) => {
+                        await mqttClient.publish(`${config.get('mqtt.topicPrefix')}/streamEnded`, JSON.stringify({
+                            name: data.roomName,
+                            port: data.port,
+                            callerName: data.callerName,
+                            channelId: data.channelId
+                        }));
+                    });
+                }
 
                 await bridge.create();
             }
